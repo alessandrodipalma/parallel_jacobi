@@ -1,6 +1,0 @@
-# ninja log v5
-5	638	6801202605595265	CMakeFiles/parallel_jacobi.dir/src/common/tests.cpp.obj	b6f4935ad54bf156
-0	723	6801202606373641	CMakeFiles/parallel_jacobi.dir/src/seq/sequential.cpp.obj	d74d94b610c2a635
-8	72	6801203117751926	CMakeFiles/parallel_jacobi.dir/src/common/tests.cpp.obj	b6f4935ad54bf156
-3	718	6801203124198431	CMakeFiles/parallel_jacobi.dir/src/seq/sequential.cpp.obj	d74d94b610c2a635
-719	855	6801203125457815	parallel_jacobi.exe	7ee54a31a5cf612a
