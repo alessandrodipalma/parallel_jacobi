@@ -1,7 +1,8 @@
 #include <vector>
 #include <random>
 #include <tuple>
-
+#include "timer.cpp"
+#include "omp.h"
 namespace dp {
 
     using Vector = std::vector<double>;
@@ -51,8 +52,9 @@ namespace dp {
         return x;
     }
 
-    Matrix diagonal(int n, double fill_value) {
+    Matrix diagonal(const int n, const double fill_value) {
         auto x = zeros(n,n);
+
         for (int i = 0; i < n; i++)
             x[i][i] = fill_value;
         return x;
@@ -60,9 +62,13 @@ namespace dp {
 
     // vector operations
 
-    double dot(Vector x, Vector y) {
+    double dot(Vector x, Vector y, unsigned long long start=0, unsigned long long end=-1) {
         double product = 0;
-        for (int i = 0; i < x.size(); i++) {
+
+        if (end==-1)
+            end = x.size();
+
+        for (unsigned long long  i = start; i < end; i++) {
             product += x[i] * y[i];
         }
         return product;
@@ -74,12 +80,14 @@ namespace dp {
         for (int i = 0; i < A.size(); i++) {
             product.assign(i, dot(A.at(i), x));
         }
+        return product;
     }
 
-    Matrix sum(const Matrix A, const Matrix B) {
+    Matrix sum(const Matrix A, const Matrix B, const int nw=1) {
         auto n = A.size();
         auto m = A[0].size();
         Matrix res = zeros(n,m);
+
         for(int i=0; i<A.size();i++)
             for(int j=0; j<A[0].size(); j++)
                 res[i][j] = A[i][j] + B[i][j];
@@ -101,8 +109,8 @@ namespace dp {
         return true;
     }
 
-    auto generate_diagonally_dominant_problem(int n) {
-        Matrix A = ones(n, n) + diagonal(n, n);
+    auto generate_diagonally_dominant_problem(int n, int nw=1) {
+        Matrix A = sum(ones(n, n),diagonal(n, n), nw);
         Vector b = full(n,2*n);
         return std::make_tuple(A, b);
     }
