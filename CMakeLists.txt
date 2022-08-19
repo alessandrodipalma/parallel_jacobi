@@ -4,8 +4,8 @@ project(parallel_jacobi)
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
-#set(CMAKE_CXX_FLAGS -pthread)
-set(CMAKE_CXX_FLAGS_RELEASE  -O3)
+set(CMAKE_CXX_FLAGS -pthread)
+set(CMAKE_CXX_FLAGS  -O3)
 
 
 # Fetch argparse from GitHub to parse arguments from command line
@@ -22,9 +22,11 @@ include_directories(${fastflow_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME}
         include/common.hpp
-        include/solvers.hpp
-        include/timer.hpp
-
         src/main.cpp
-        src/seq/sequential.cpp
-        src/cpp/parallel_jacobi.cpp)
+
+        include/timer.hpp
+        src/sequential.cpp
+        src/parallel_jacobi.cpp
+        )
+
+target_link_libraries(${PROJECT_NAME})

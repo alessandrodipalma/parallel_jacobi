@@ -1,10 +1,8 @@
-#include "../../include/solvers.hpp"
-
-using namespace dp;
+#include "../include/solvers.h"
 
 Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
 
-    Vector x = dp::rand(b.size());
+    Vector x = rand(b.size());
 
     for (int k = 0; k < max_iter; k++) {
         for (int i = 0; i < A.size(); i++) {
