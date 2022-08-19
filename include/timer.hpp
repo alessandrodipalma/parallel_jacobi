@@ -1,6 +1,12 @@
+//
+// Created by al on 19/08/2022.
+//
+
+#ifndef PARALLEL_JACOBI_TIMER_HPP
+#define PARALLEL_JACOBI_TIMER_HPP
+
 #include <iostream>
 #include <chrono>
-#include <thread>
 
 
 #define START(timename) auto timename = std::chrono::system_clock::now();
@@ -41,3 +47,5 @@ public:
             (*us_elapsed) = musec;
     }
 };
+
+#endif //PARALLEL_JACOBI_TIMER_HPP

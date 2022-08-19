@@ -7,7 +7,7 @@
 //             {0.0, 3.,  -1., 8.}};
 //    Vector b{6, 25, -11, 15};
 //
-////    auto x = jacobi(A, b, 25);
+////    auto x = jacobi_seq(A, b, 25);
 ////    for (auto &it: x) std::cout << it << std::endl;
 //}
 //
@@ -16,6 +16,6 @@
 //             {5, 7}};
 //    Vector b{11, 13};
 //
-////    auto x = jacobi(A, b, 25);
+////    auto x = jacobi_seq(A, b, 25);
 ////    for (auto &it: x) std::cout << it << std::endl;
 //}
