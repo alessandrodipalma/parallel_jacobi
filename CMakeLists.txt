@@ -1,12 +1,14 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.16)
 project(parallel_jacobi)
 
 include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS -pthread)
-set(CMAKE_CXX_FLAGS  -O3)
+#set(CMAKE_C_FLAGS -pthread)
+set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 # Fetch argparse from GitHub to parse arguments from command line
 # in a modern C++ way.
@@ -29,4 +31,4 @@ add_executable(${PROJECT_NAME}
         src/parallel_jacobi.cpp
         )
 
-target_link_libraries(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} Threads::Threads)

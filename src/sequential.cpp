@@ -1,8 +1,9 @@
+#include <iostream>
 #include "../include/solvers.h"
 
 Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
 
-    Vector x = rand(b.size());
+    Vector x(b.size(),0);
 
     for (int k = 0; k < max_iter; k++) {
         for (int i = 0; i < A.size(); i++) {
@@ -14,11 +15,38 @@ Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
             }
             x[i] = (b[i] - s) / A[i][i];
         }
-//        x = x_new;
+        if (are_ones(x)){
+            std::cout << "computed in " << k << " iterations" << std::endl;
+            return x;
+        }
     }
     return x;
 }
 
+
+Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, int nw= 1) {
+
+    Vector x(b.size(),0);
+
+    for (int k = 0; k < max_iter; k++) {
+        Vector x_new(b.size(),0);
+        for (int i = 0; i < A.size(); i++) {
+            double s = 0;
+
+            for (int j = 0; j < A.size(); j++) {
+                if (j != i)
+                    s = s + A[i][j] * x[j];
+            }
+            x_new[i] = (b[i] - s) / A[i][i];
+        }
+        if (x==x_new) {
+            std::cout << "in " << k << " iter" << std::endl;
+            return x;
+        }
+        x = x_new;
+    }
+    return x;
+}
 
 
 Vector jacobi_prod(Matrix A, Vector b, int max_iter, int nw=1) {

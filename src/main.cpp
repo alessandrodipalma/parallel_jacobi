@@ -16,22 +16,26 @@ int main(int argc, char *argv[]) {
         tup = generate_diagonally_dominant_problem(problem_size, nw);
     }
 
-    const int n_iter = 50;
+    const int n_iter = 1000;
 
     Vector x;
     {
-        timer t("sequential");
+        timer t("sequen");
         x = jacobi_seq(std::get<0>(tup), std::get<1>(tup), n_iter, nw);
     }
-    std::cout << are_ones(x) << "  " << std::endl;
+
+//    std::cout << are_ones(x)  <<"  " << std::endl;
+//    for (auto &it: x) std::cout << it << " ";
+    std::cout << std::endl;
 
     {
         timer t("native");
         x = jacobi_native(std::get<0>(tup), std::get<1>(tup), n_iter, nw);
     }
 
-    std::cout << are_ones(x) << "  " << std::endl;
+//    std::cout << are_ones(x) << "  " << std::endl;
+//    for (auto &it: x) std::cout << it << " ";
+    std::cout << std::endl;
 
-//    for (auto &it: x) std::cout << it << std::endl;
     return 0;
 }

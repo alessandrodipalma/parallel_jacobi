@@ -4,6 +4,7 @@
 #include <vector>
 #include <random>
 #include <tuple>
+#include <iostream>
 #include "omp.h"
 
 
@@ -88,11 +89,24 @@ namespace dp {
     // checks
     inline bool are_ones(const Vector x) {
         for (auto &it: x) {
-            if(it!=1){
+            if(fabs(it-1.0) > 1e-8 ){
                 return false;
             }
-        };
+        }
         return true;
+    }
+
+    inline bool equals(const Vector x, const Vector y, double tol=1e-8) {
+        if (x.size()==y.size()){
+            for (int i=0; i<x.size(); i++) {
+                if(fabs(x[i]-y[i]) > tol){
+                    return false;
+                }
+            }
+            return true;
+        }
+        std::cout << "x and y must have same size";
+        return false;
     }
 
     inline auto generate_diagonally_dominant_problem(int n, int nw=1) {
