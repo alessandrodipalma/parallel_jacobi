@@ -5,6 +5,8 @@ include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 20)
 #set(CMAKE_C_FLAGS -pthread)
+
+
 set(CMAKE_CXX_FLAGS_RELEASE -O3)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -24,11 +26,15 @@ include_directories(${fastflow_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME}
         include/common.hpp
+        include/task_pool.h
         src/main.cpp
 
         include/timer.hpp
         src/sequential.cpp
         src/parallel_jacobi.cpp
+        src/parallel_jacobi_native2.0.cpp
+        src/jacobi_task_pool.cpp
+        src/task_pool.cpp
         )
 
 target_link_libraries(${PROJECT_NAME} Threads::Threads)

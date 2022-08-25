@@ -11,7 +11,7 @@ Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
 
             for (int j = 0; j < A.size(); j++) {
                 if (j != i)
-                    s = s + A[i][j] * x[j];
+                    s += A[i][j] * x[j];
             }
             x[i] = (b[i] - s) / A[i][i];
         }
@@ -24,6 +24,7 @@ Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
 }
 
 
+
 Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, int nw= 1) {
 
     Vector x(b.size(),0);
@@ -32,14 +33,14 @@ Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, int nw= 1) {
         Vector x_new(b.size(),0);
         for (int i = 0; i < A.size(); i++) {
             double s = 0;
-
             for (int j = 0; j < A.size(); j++) {
-                if (j != i)
-                    s = s + A[i][j] * x[j];
+                if (j != i){
+                    s += A[i][j] * x[j];
+                }
             }
             x_new[i] = (b[i] - s) / A[i][i];
         }
-        if (x==x_new) {
+        if (are_ones(x)) {
             std::cout << "in " << k << " iter" << std::endl;
             return x;
         }
