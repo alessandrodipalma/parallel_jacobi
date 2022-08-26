@@ -9,34 +9,50 @@ using namespace dp;
 
 int main(int argc, char *argv[]) {
 //     nw should be used for internal vector operations despite the jacobi method run in parallel
-    unsigned const int nw = std::stoi(argv[1]);
-    unsigned const int problem_size = std::stoi(argv[2]);
+    unsigned const int min_w = std::stoi(argv[1]);
+    unsigned const int max_w = std::stoi(argv[2]);
+    unsigned const int problem_size = std::stoi(argv[3]);
     // if 0, select the ones stopping criteria and set max_iter to 1e4, otherwise set a fixed number of
-    unsigned int n_iter = std::stoi(argv[3]);
+    unsigned int n_iter = std::stoi(argv[4]);
 
     std::tuple<Matrix, Vector> tup;
     {
         timer t("\ngeneration");
-        tup = generate_diagonally_dominant_problem(problem_size, nw);
+        tup = generate_diagonally_dominant_problem(problem_size);
     }
+
 
     Vector x;
     {
         timer t("sequen");
-        x = jacobi_seq_separate_iter(std::get<0>(tup), std::get<1>(tup), n_iter, nw);
+        x = jacobi_seq_separate_iter(std::get<0>(tup), std::get<1>(tup), n_iter, are_ones);
     }
     std::cout << are_ones(x)  <<"  " << std::endl;
 //    for (auto &it: x) std::cout << it << " ";
 
-    std::stringstream s;
-    s << "native with " << nw << " workers";
 
-    std::function<bool(Vector&)> stopping;
 
-    {
-        timer t(s.str());
-        x = jacobi_task_pool(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+    for (unsigned int nw = min_w; nw<=max_w; nw++){
+        {
+            std::stringstream s;
+            s << "c+ with " << nw << " workers";
+            timer t(s.str());
+            x = jacobi_native(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+        }
+        {
+            std::stringstream s;
+            s << "ff with " << nw << " workers";
+            timer t(s.str());
+            x = jacobi_ff(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+        }
+        {
+            std::stringstream s;
+            s << "om with " << nw << " workers";
+            timer t(s.str());
+            x = jacobi_omp(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+        }
     }
+
     std::cout << are_ones(x) << "  " << std::endl;
     for (auto &it: x) std::cout << it << " ";
 

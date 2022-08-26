@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../include/solvers.h"
 
-Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
+Vector jacobi_seq(Matrix A, Vector& b, int max_iter, int nw= 1) {
 
     Vector x(b.size(),0);
 
@@ -25,24 +25,25 @@ Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw= 1) {
 
 
 
-Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, int nw= 1) {
+Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, std::function<bool(Vector &)> stopping_criteria) {
 
     Vector x(b.size(),0);
+    Vector x_new(b.size(),0);
+    int n= A.size();
+    Vector diag(n);
+    for (int i = 0; i<n; i++) {
+        diag[i] = A[i][i];
+        A[i][i]=0;
+    }
 
     for (int k = 0; k < max_iter; k++) {
-        Vector x_new(b.size(),0);
-        for (int i = 0; i < A.size(); i++) {
-            double s = 0;
-            for (int j = 0; j < A.size(); j++) {
-                if (j != i){
-                    s += A[i][j] * x[j];
-                }
-            }
-            x_new[i] = (b[i] - s) / A[i][i];
+        for (int i = 0; i < n; i++) {
+            double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(),0.0);
+            x_new[i] = (b[i] - s) / diag[i];
         }
-        if (are_ones(x)) {
+        if (stopping_criteria(x_new)) {
             std::cout << "in " << k << " iter" << std::endl;
-            return x;
+            return x_new;
         }
         x = x_new;
     }

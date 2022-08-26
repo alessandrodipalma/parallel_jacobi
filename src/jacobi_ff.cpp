@@ -1,0 +1,39 @@
+#include "../include/solvers.h"
+#include <ff/parallel_for.hpp>
+#include <thread>
+#include <numeric>
+
+dp::Vector jacobi_ff(Matrix A, const Vector b, const int max_iter, int nw,
+                     std::function<bool(Vector &)> stopping_criteria) {
+
+    int n = A.size();
+    Vector diag(n);
+    for (int i = 0; i < n; i++) {
+        diag[i] = A[i][i];
+        A[i][i] = 0;
+    }
+
+    Vector x(n, 0);
+    Vector x_new(n,0);
+
+    int k = 0;
+
+    ff::ParallelFor parallelFor(nw);
+
+    while (k < max_iter) {
+
+        parallelFor.parallel_for(0, n, 1, [&A, &diag, &b, &x, &x_new](const long i) {
+            double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(), 0.0);
+            x_new[i] = (b[i] - s) / diag[i];
+        }, nw);
+
+        if (stopping_criteria(x_new)) {
+            std::cout << "in " << k << " iter" << std::endl;
+            return x_new;
+        }
+        x = x_new;
+        k++;
+    }
+    return x_new;
+}
+

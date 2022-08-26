@@ -1,47 +1,45 @@
 #include "../include/solvers.h"
-#include <thread>
-#include <mutex>
 #include <functional>
+#include <barrier>
+#include <numeric>
 
-dp::Vector jacobi_native(const Matrix A, const Vector b, const int max_iter, int nw,
+
+dp::Vector jacobi_native(Matrix A, Vector b, const int max_iter, int nw,
                          std::function<bool(Vector &)> stopping_criteria) {
     int n = A.size();
     // setup threads
     std::vector<std::thread> tids(nw);
 
+    Vector diag(n);
+    for (int i = 0; i<n; i++) {
+        diag[i] = A[i][i];
+        A[i][i]=0;
+    }
 
     Vector x(n, 0);
+    Vector x_new(n);
 
-    // define task
-    std::mutex ll;
+    int k = 0;
 
-    std::atomic<unsigned int> k = 0;
-    std::atomic<unsigned int> w_count = 0;
-    auto f = [&A, &b, n, max_iter, &k, &x, &w_count, nw, stopping_criteria](int start, int end, int tid) {
+    auto on_completion = [&k,&x,&x_new, &stopping_criteria, max_iter]() noexcept {
+        // locking not needed here
+        if(stopping_criteria(x_new)){
+            std::cout << "in " << k << " iter" << std::endl;
+            k=max_iter;
+        }
+        k++;
+        x = x_new;
+    };
+    std::barrier sync_point(nw, on_completion);
+
+    auto f = [&A, &b, &diag, n, max_iter, &k, &x, &x_new, &sync_point](int start, int end, int tid) {
         while (k < max_iter) {
             for (int i = start; i < end; i++) {
-                double s = 0;
-                for (int j = 0; j < n; j++) {
-                    if (j != i) {
-                        s = s + A[i][j] * x[j];
-                    }
-                }
-                x[i] = (b[i] - s) / A[i][i];
-
+                double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(),0.0);
+                x_new[i] = (b[i] - s) / diag[i];
             }
 
-            if (k >= max_iter) {
-                return;
-            }
-            if (stopping_criteria != nullptr && stopping_criteria(x)) {
-                std::cout << "computed in " << k << " iterations" << std::endl;
-                k = max_iter; // to let the other workers return
-                return;
-            }
-            if (++w_count == nw) {
-                k++;
-                w_count = 0;
-            }
+            sync_point.arrive_and_wait();
         }
     };
 

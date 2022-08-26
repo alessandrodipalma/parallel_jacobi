@@ -115,7 +115,6 @@ namespace dp {
         return std::make_tuple(A, b);
     }
 
-
 }
 
 #endif //PARALLEL_JACOBI_COMMON_HPP
