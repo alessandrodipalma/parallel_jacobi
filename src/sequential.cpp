@@ -63,7 +63,7 @@ Vector jacobi_prod(Matrix A, Vector b, int max_iter, int nw=1) {
                 {
                     s1 = dot(A[i], x, 0, i, nw / 2);
                 }
-                #pragma omp section/
+                #pragma omp section
                 {
                     s2 = dot(A[i], x, i + 1, x.size(), nw / 2);
                 }
@@ -75,5 +75,3 @@ Vector jacobi_prod(Matrix A, Vector b, int max_iter, int nw=1) {
     return x;
 
 }
-
-

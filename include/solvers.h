@@ -22,23 +22,55 @@ inline std::vector<int> define_chunks(int nw, int n) {
     chunks.back() = n;
     return chunks;
 }
+
+
 Vector jacobi_seq(Matrix A, Vector b, int max_iter, int nw);
 
 Vector jacobi_seq_separate_iter
-(Matrix A, Vector b, int max_iter, std::function<bool(Vector&)> stopping_criteria=nullptr);
+        (Matrix A, Vector b, int max_iter, std::function<bool(Vector &)> stopping_criteria = nullptr);
 
-Vector jacobi_native
-(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+class solver {
+public:
+    virtual Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>)=0;
+    virtual std::string name() = 0;
+    virtual ~solver() {};
+};
 
-Vector jacobi_native_sep_iter
-(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+class jacobi_native: public solver {
+public:
 
-Vector jacobi_task_pool
-(Matrix A, Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "c+";}
 
-Vector jacobi_ff
-(Matrix A, const Vector b, const int max_iter, int nw,std::function<bool(Vector &)> stopping_criteria= nullptr);
+    ~jacobi_native() {};
+};
 
-Vector jacobi_omp
-(Matrix A, const Vector b, const int max_iter, int nw, std::function<bool(Vector &)> stopping_criteria= nullptr);
+class jacobi_ff: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "ff";}
+    ~jacobi_ff() {};
+};
+
+class jacobi_omp: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "om";}
+    ~jacobi_omp() {};
+};
+//
+//Vector jacobi_native
+//(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+//
+//Vector jacobi_native_sep_iter
+//(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+//
+//Vector jacobi_task_pool
+//(Matrix A, Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
+//
+//Vector jacobi_ff
+//(Matrix A, const Vector b, const int max_iter, int nw,std::function<bool(Vector &)> stopping_criteria= nullptr);
+//
+//Vector jacobi_omp
+//(Matrix A, const Vector b, const int max_iter, int nw, const std::function<bool(Vector &)>& stopping_criteria= nullptr);
 #endif //PARALLEL_JACOBI_SOLVERS_H

@@ -4,16 +4,16 @@
 #include <numeric>
 
 
-dp::Vector jacobi_native(Matrix A, Vector b, const int max_iter, int nw,
-                         std::function<bool(Vector &)> stopping_criteria) {
+Vector jacobi_native::solve(Matrix A, Vector b, const int max_iter, int nw,
+                            std::function<bool(Vector &)> stopping_criteria) {
     int n = A.size();
     // setup threads
     std::vector<std::thread> tids(nw);
 
     Vector diag(n);
-    for (int i = 0; i<n; i++) {
+    for (int i = 0; i < n; i++) {
         diag[i] = A[i][i];
-        A[i][i]=0;
+        A[i][i] = 0;
     }
 
     Vector x(n, 0);
@@ -21,11 +21,13 @@ dp::Vector jacobi_native(Matrix A, Vector b, const int max_iter, int nw,
 
     int k = 0;
 
-    auto on_completion = [&k,&x,&x_new, &stopping_criteria, max_iter]() noexcept {
+    auto on_completion = [&k, &x, &x_new, &stopping_criteria, max_iter]() noexcept {
         // locking not needed here
-        if(stopping_criteria(x_new)){
+        if (stopping_criteria != nullptr && stopping_criteria(x_new)) {
+#ifdef PRINT_ITER
             std::cout << "in " << k << " iter" << std::endl;
-            k=max_iter;
+#endif
+            k = max_iter;
         }
         k++;
         x = x_new;
@@ -35,7 +37,7 @@ dp::Vector jacobi_native(Matrix A, Vector b, const int max_iter, int nw,
     auto f = [&A, &b, &diag, n, max_iter, &k, &x, &x_new, &sync_point](int start, int end, int tid) {
         while (k < max_iter) {
             for (int i = start; i < end; i++) {
-                double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(),0.0);
+                double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(), 0.0);
                 x_new[i] = (b[i] - s) / diag[i];
             }
 

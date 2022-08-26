@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <memory>
+#include <list>
 
 using namespace dp;
 
@@ -24,37 +26,56 @@ int main(int argc, char *argv[]) {
 
     Vector x;
     {
-        timer t("sequen");
+        timer t("sq");
         x = jacobi_seq_separate_iter(std::get<0>(tup), std::get<1>(tup), n_iter, are_ones);
     }
-    std::cout << are_ones(x)  <<"  " << std::endl;
+    std::cout << are_ones(x) << "  " << std::endl;
 //    for (auto &it: x) std::cout << it << " ";
 
+    std::vector<std::unique_ptr<solver>> solvers;
+    solvers.emplace_back(new jacobi_native{});
+    solvers.emplace_back(new jacobi_ff{});
+    solvers.emplace_back(new jacobi_omp{});
 
-
-    for (unsigned int nw = min_w; nw<=max_w; nw++){
-        {
-            std::stringstream s;
-            s << "c+ with " << nw << " workers";
-            timer t(s.str());
-            x = jacobi_native(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
-        }
-        {
-            std::stringstream s;
-            s << "ff with " << nw << " workers";
-            timer t(s.str());
-            x = jacobi_ff(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
-        }
-        {
-            std::stringstream s;
-            s << "om with " << nw << " workers";
-            timer t(s.str());
-            x = jacobi_omp(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+    for (int i = 0; i<3; i++){
+        for (unsigned int nw = min_w; nw <= max_w; nw++) {
+            {
+                std::stringstream s;
+                s << solvers[i]->name() << " with " << nw << " workers";
+                timer t(s.str());
+                x = solvers[i]->solve(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+            }
+#ifdef CHECK_ONES
+            std::cout << are_ones(x) << "  " << std::endl;
+#endif
         }
     }
 
-    std::cout << are_ones(x) << "  " << std::endl;
-    for (auto &it: x) std::cout << it << " ";
 
-    return 0;
+//    for (unsigned int nw = min_w; nw <= max_w; nw++) {
+//        {
+//            std::stringstream s;
+//            s << "ff with " << nw << " workers";
+//            timer t(s.str());
+//            x = jacobi_ff.solve(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+//        }
+//#ifdef CHECK_ONES
+//        std::cout << are_ones(x) << "  " << std::endl;
+//#endif
+//    }
+//
+//    for (unsigned int nw = min_w; nw <= max_w; nw++) {
+//        {
+//            std::stringstream s;
+//            s << "om with " << nw << " workers";
+//            timer t(s.str());
+//            x = jacobi_omp.solve(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
+//        }
+//        std::cout << are_ones(x) << "  " << std::endl;
+//    }
+//
+//
+//    for (auto &it: x) std::cout << it << " ";
+//
+//    return 0;
 }

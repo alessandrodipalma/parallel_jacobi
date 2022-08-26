@@ -2,8 +2,8 @@
 #include <omp.h>
 #include <numeric>
 
-dp::Vector jacobi_omp(Matrix A, const Vector b, const int max_iter, int nw,
-                      std::function<bool(Vector &)> stopping_criteria) {
+Vector jacobi_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
+                      const std::function<bool(Vector &)> stopping_criteria) {
 
     int n = A.size();
 
@@ -18,24 +18,21 @@ dp::Vector jacobi_omp(Matrix A, const Vector b, const int max_iter, int nw,
 
     int k = 0;
 
-    #pragma omp parallel num_threads(nw)
     while (k < max_iter) {
-        #pragma omp for
+        #pragma omp parallel for num_threads(nw)
         for (int i = 0; i < n; i++) {
             double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(), 0.0);
             x_new[i] = (b[i] - s) / diag[i];
         }
 
-        #pragma omp critical
-        {
-            if (stopping_criteria(x_new)) {
-                std::cout << "in " << k << " iter" << std::endl;
-                return x_new;
-            }
-            x = x_new;
-            k++;
-        };
-
+        if (stopping_criteria!= nullptr &&  stopping_criteria(x_new)) {
+#ifdef PRINT_ITER
+            std::cout << "in " << k << " iter" << std::endl;
+#endif
+            k=max_iter;
+        }
+        x = x_new;
+        k++;
     }
     return x;
 }

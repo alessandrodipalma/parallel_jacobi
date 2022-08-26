@@ -3,7 +3,7 @@
 #include <thread>
 #include <numeric>
 
-dp::Vector jacobi_ff(Matrix A, const Vector b, const int max_iter, int nw,
+Vector jacobi_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
                      std::function<bool(Vector &)> stopping_criteria) {
 
     int n = A.size();
@@ -27,8 +27,10 @@ dp::Vector jacobi_ff(Matrix A, const Vector b, const int max_iter, int nw,
             x_new[i] = (b[i] - s) / diag[i];
         }, nw);
 
-        if (stopping_criteria(x_new)) {
+        if (stopping_criteria!= nullptr && stopping_criteria(x_new)) {
+#ifdef PRINT_ITER
             std::cout << "in " << k << " iter" << std::endl;
+#endif
             return x_new;
         }
         x = x_new;
