@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(parallel_jacobi)
 
-#add_compile_definitions(PRINT_ITER)
-#add_compile_definitions(CHECK_ONES)
+add_compile_definitions(PRINT_ITER)
+add_compile_definitions(CHECK_ONES)
 
 include(FetchContent)
 
@@ -30,12 +30,9 @@ add_executable(${PROJECT_NAME}
         include/task_pool.h
         include/solvers.h
         src/main.cpp
-
         include/timer.hpp
         src/sequential.cpp
-        src/parallel_jacobi.cpp
-        src/parallel_jacobi_native2.0.cpp
-        src/jacobi_task_pool.cpp
+        src/jacobi_native.cpp
         src/task_pool.cpp
         src/jacobi_ff.cpp
         src/jacobi_omp.cpp)

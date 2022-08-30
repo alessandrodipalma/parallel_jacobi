@@ -6,7 +6,6 @@
 #include <sstream>
 #include <memory>
 #include <list>
-
 using namespace dp;
 
 int main(int argc, char *argv[]) {
@@ -19,7 +18,9 @@ int main(int argc, char *argv[]) {
 
     std::tuple<Matrix, Vector> tup;
     {
-        timer t("\ngeneration");
+        std::stringstream s;
+        s <<  "generation of " << problem_size << " sized problem";
+        timer t(s.str());
         tup = generate_diagonally_dominant_problem(problem_size);
     }
 
@@ -37,8 +38,9 @@ int main(int argc, char *argv[]) {
     solvers.emplace_back(new jacobi_ff{});
     solvers.emplace_back(new jacobi_omp{});
 
-    for (int i = 0; i<3; i++){
+    for (int i = 0; i<solvers.size(); i++){
         for (unsigned int nw = min_w; nw <= max_w; nw++) {
+
             {
                 std::stringstream s;
                 s << solvers[i]->name() << " with " << nw << " workers";
@@ -50,32 +52,4 @@ int main(int argc, char *argv[]) {
 #endif
         }
     }
-
-
-//    for (unsigned int nw = min_w; nw <= max_w; nw++) {
-//        {
-//            std::stringstream s;
-//            s << "ff with " << nw << " workers";
-//            timer t(s.str());
-//            x = jacobi_ff.solve(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
-//        }
-//#ifdef CHECK_ONES
-//        std::cout << are_ones(x) << "  " << std::endl;
-//#endif
-//    }
-//
-//    for (unsigned int nw = min_w; nw <= max_w; nw++) {
-//        {
-//            std::stringstream s;
-//            s << "om with " << nw << " workers";
-//            timer t(s.str());
-//            x = jacobi_omp.solve(std::get<0>(tup), std::get<1>(tup), n_iter, nw, are_ones);
-//        }
-//        std::cout << are_ones(x) << "  " << std::endl;
-//    }
-//
-//
-//    for (auto &it: x) std::cout << it << " ";
-//
-//    return 0;
 }

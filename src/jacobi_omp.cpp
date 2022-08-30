@@ -3,7 +3,7 @@
 #include <numeric>
 
 Vector jacobi_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
-                      const std::function<bool(Vector &)> stopping_criteria) {
+                         const std::function<bool(Vector &)> stopping_criteria) {
 
     int n = A.size();
 
@@ -25,14 +25,13 @@ Vector jacobi_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
             x_new[i] = (b[i] - s) / diag[i];
         }
 
-        if (stopping_criteria!= nullptr &&  stopping_criteria(x_new)) {
-#ifdef PRINT_ITER
+        if (stopping_criteria(x_new)) {
             std::cout << "in " << k << " iter" << std::endl;
-#endif
             k=max_iter;
+        } else {
+            x.swap(x_new);
+            k++;
         }
-        x = x_new;
-        k++;
     }
-    return x;
+    return x_new;
 }

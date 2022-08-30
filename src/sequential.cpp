@@ -1,25 +1,25 @@
 #include <iostream>
 #include "../include/solvers.h"
 
-Vector jacobi_seq(Matrix A, Vector& b, int max_iter, int nw= 1) {
+Vector jacobi_seq(Matrix A, Vector& b, int max_iter, std::function<bool(Vector &)> stopping_criteria) {
 
     Vector x(b.size(),0);
 
     for (int k = 0; k < max_iter; k++) {
         for (int i = 0; i < A.size(); i++) {
-            double s = 0;
-
+            double sigma = 0;
             for (int j = 0; j < A.size(); j++) {
                 if (j != i)
-                    s += A[i][j] * x[j];
+                    sigma += A[i][j] * x[j];
             }
-            x[i] = (b[i] - s) / A[i][i];
+            x[i] = (b[i] - sigma) / A[i][i];
         }
-        if (are_ones(x)){
+        if (stopping_criteria(x)){
             std::cout << "computed in " << k << " iterations" << std::endl;
-            return x;
+            break;
         }
     }
+
     return x;
 }
 
@@ -45,7 +45,7 @@ Vector jacobi_seq_separate_iter(Matrix A, Vector b, int max_iter, std::function<
             std::cout << "in " << k << " iter" << std::endl;
             return x_new;
         }
-        x = x_new;
+        x.swap(x_new);
     }
     return x;
 }

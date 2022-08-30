@@ -21,6 +21,7 @@ inline std::vector<int> define_chunks(int nw, int n) {
     }
     chunks.back() = n;
     return chunks;
+
 }
 
 
