@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(parallel_jacobi)
 
-add_compile_definitions(PRINT_ITER)
-add_compile_definitions(CHECK_ONES)
+#add_compile_definitions(PRINT_ITER)
+#add_compile_definitions(CHECK_ONES)
 
 include(FetchContent)
 
