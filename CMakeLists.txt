@@ -35,6 +35,9 @@ add_executable(${PROJECT_NAME}
         src/jacobi_native.cpp
         src/task_pool.cpp
         src/jacobi_ff.cpp
-        src/jacobi_omp.cpp src/jacobi_alternative.cpp src/jacobi_alter_native.cpp)
+        src/jacobi_omp.cpp
+        src/jacobi_alternative.cpp
+        src/jacobi_alter_native.cpp
+        src/jacobi_alter_ff.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads  OpenMP::OpenMP_CXX)

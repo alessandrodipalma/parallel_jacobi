@@ -73,4 +73,12 @@ public:
     std::string name() {return "al";}
     ~jacobi_alter_native() {};
 };
+
+class jacobi_alter_ff: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "af";}
+    ~jacobi_alter_ff() {};
+};
+
 #endif //PARALLEL_JACOBI_SOLVERS_H

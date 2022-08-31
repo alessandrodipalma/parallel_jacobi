@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 //    solvers.emplace_back(new jacobi_native{});
 //    solvers.emplace_back(new jacobi_ff{});
 //    solvers.emplace_back(new jacobi_omp{});
-    solvers.emplace_back(new jacobi_alternative{});
+    solvers.emplace_back(new jacobi_alter_ff{});
 
     for (int i = 0; i<solvers.size(); i++){
         for (unsigned int nw = min_w; nw <= max_w; nw++) {
