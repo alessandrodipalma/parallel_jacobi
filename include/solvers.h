@@ -59,19 +59,18 @@ public:
     std::string name() {return "om";}
     ~jacobi_omp() {};
 };
-//
-//Vector jacobi_native
-//(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
-//
-//Vector jacobi_native_sep_iter
-//(Matrix A,const Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
-//
-//Vector jacobi_task_pool
-//(Matrix A, Vector b, int max_iter, int nw, std::function<bool(Vector&)> stopping_criteria=nullptr);
-//
-//Vector jacobi_ff
-//(Matrix A, const Vector b, const int max_iter, int nw,std::function<bool(Vector &)> stopping_criteria= nullptr);
-//
-//Vector jacobi_omp
-//(Matrix A, const Vector b, const int max_iter, int nw, const std::function<bool(Vector &)>& stopping_criteria= nullptr);
+
+class jacobi_alternative: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "al";}
+    ~jacobi_alternative() {};
+};
+
+class jacobi_alter_native: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "al";}
+    ~jacobi_alter_native() {};
+};
 #endif //PARALLEL_JACOBI_SOLVERS_H

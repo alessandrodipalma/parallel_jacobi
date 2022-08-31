@@ -81,8 +81,15 @@ namespace dp {
         return res;
     }
 
+    inline Vector sum(const Vector& A,const Vector& B) {
+        Vector C(A.size());
+        std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::plus<double>());
+        return C;
+    }
+
     // OPERATORS OVERLOADING
     inline Matrix operator+(const Matrix& A,const Matrix& B) {return sum(A,B);}
+    inline Vector operator+(const Vector& A,const Vector& B) {return sum(A,B);}
     inline double operator*(const Vector& x,const Vector& y) {return dot(x,y);}
     inline Vector operator*(const Matrix& A,const Vector& x) {return dot(A,x);}
 

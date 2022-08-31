@@ -34,9 +34,10 @@ int main(int argc, char *argv[]) {
 //    for (auto &it: x) std::cout << it << " ";
 
     std::vector<std::unique_ptr<solver>> solvers;
-    solvers.emplace_back(new jacobi_native{});
-    solvers.emplace_back(new jacobi_ff{});
-    solvers.emplace_back(new jacobi_omp{});
+//    solvers.emplace_back(new jacobi_native{});
+//    solvers.emplace_back(new jacobi_ff{});
+//    solvers.emplace_back(new jacobi_omp{});
+    solvers.emplace_back(new jacobi_alternative{});
 
     for (int i = 0; i<solvers.size(); i++){
         for (unsigned int nw = min_w; nw <= max_w; nw++) {
