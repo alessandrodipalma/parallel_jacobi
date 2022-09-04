@@ -51,9 +51,8 @@ Vector jacobi_alter_ff::solve(Matrix A, const Vector b, const int max_iter, int 
         } else {
             std::fill(sigma.begin(), sigma.end(), 0.0);
             pf.parallel_reduce(sigma, zero, 0, nw, f, fred, nw);
-            for (int i = 0; i < n; i++) {
-                x_new[i] = (b[i] - sigma[i]) / diag[i];
-            }
+
+            x_new = (b - sigma) / diag;
 
             if (stopping_criteria != nullptr && stopping_criteria(x_new)) {
                 #ifdef PRINT_ITER

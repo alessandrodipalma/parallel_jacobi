@@ -86,12 +86,24 @@ namespace dp {
         std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::plus<double>());
         return C;
     }
+    inline Vector divide(const Vector& A,const Vector& B) {
+        Vector C(A.size());
+        std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::divides<double>());
+        return C;
+    }
+    inline Vector minus(const Vector& A,const Vector& B) {
+        Vector C(A.size());
+        std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::minus<double>());
+        return C;
+    }
 
     // OPERATORS OVERLOADING
     inline Matrix operator+(const Matrix& A,const Matrix& B) {return sum(A,B);}
     inline Vector operator+(const Vector& A,const Vector& B) {return sum(A,B);}
     inline double operator*(const Vector& x,const Vector& y) {return dot(x,y);}
     inline Vector operator*(const Matrix& A,const Vector& x) {return dot(A,x);}
+    inline Vector operator/(const Vector& A,const Vector& x) {return divide(A,x);}
+    inline Vector operator-(const Vector& A,const Vector& x) {return minus(A,x);}
 
     // checks
     inline bool are_ones(const Vector x) {

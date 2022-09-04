@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(parallel_jacobi)
 #
-#add_compile_definitions(PRINT_ITER)
-#add_compile_definitions(CHECK_ONES)
+add_compile_definitions(PRINT_ITER)
+add_compile_definitions(CHECK_ONES)
 
 include(FetchContent)
 
@@ -38,6 +38,7 @@ add_executable(${PROJECT_NAME}
         src/jacobi_omp.cpp
         src/jacobi_alternative.cpp
         src/jacobi_alter_native.cpp
-        src/jacobi_alter_ff.cpp)
+        src/jacobi_double_reduce.cpp
+        src/jacobi_alter_ff.cpp src/jacobi_double_reduce.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads  OpenMP::OpenMP_CXX)

@@ -81,4 +81,11 @@ public:
     ~jacobi_alter_ff() {};
 };
 
+class jacobi_2red: public solver {
+public:
+    Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
+    std::string name() {return "2r";}
+    ~jacobi_2red() {};
+};
+
 #endif //PARALLEL_JACOBI_SOLVERS_H
