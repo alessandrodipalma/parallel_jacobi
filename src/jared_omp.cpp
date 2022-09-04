@@ -2,7 +2,7 @@
 #include <omp.h>
 #include <numeric>
 
-Vector jacobi_alternative::solve(Matrix A, Vector b, const int max_iter, int nw,
+Vector jared_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
                          const std::function<bool(Vector &)> stopping_criteria) {
 
     int n = A.size();

@@ -37,48 +37,48 @@ public:
     virtual ~solver() {};
 };
 
-class jacobi_native: public solver {
+class jafarm_cpp: public solver {
 public:
 
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "c+";}
 
-    ~jacobi_native() {};
+    ~jafarm_cpp() {};
 };
 
-class jacobi_ff: public solver {
+class jafarm_ff: public solver {
 public:
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "ff";}
-    ~jacobi_ff() {};
+    ~jafarm_ff() {};
 };
 
-class jacobi_omp: public solver {
+class jafarm_omp: public solver {
 public:
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "om";}
-    ~jacobi_omp() {};
+    ~jafarm_omp() {};
 };
 
-class jacobi_alternative: public solver {
+class jared_omp: public solver {
 public:
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "al";}
-    ~jacobi_alternative() {};
+    ~jared_omp() {};
 };
 
-class jacobi_alter_native: public solver {
+class jared_cpp: public solver {
 public:
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "al";}
-    ~jacobi_alter_native() {};
+    ~jared_cpp() {};
 };
 
-class jacobi_alter_ff: public solver {
+class jared_ff: public solver {
 public:
     Vector solve(Matrix, Vector, int, int, std::function<bool(Vector &)>) override;
     std::string name() {return "af";}
-    ~jacobi_alter_ff() {};
+    ~jared_ff() {};
 };
 
 class jacobi_2red: public solver {

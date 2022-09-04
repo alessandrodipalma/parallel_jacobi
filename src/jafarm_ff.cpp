@@ -3,7 +3,7 @@
 #include <thread>
 #include <numeric>
 
-Vector jacobi_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
+Vector jafarm_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
                         std::function<bool(Vector &)> stopping_criteria) {
 
     int n = A.size();

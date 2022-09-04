@@ -35,11 +35,11 @@ int main(int argc, char *argv[]) {
 
 
     std::vector<std::unique_ptr<solver>> solvers;
-    if(std::stoi(argv[5]) == 1) solvers.emplace_back(new jacobi_native{});
-    if(std::stoi(argv[6]) == 1) solvers.emplace_back(new jacobi_ff{});
-    if(std::stoi(argv[7]) == 1) solvers.emplace_back(new jacobi_omp{});
-    if(std::stoi(argv[8]) == 1) solvers.emplace_back(new jacobi_alternative{});
-    if(std::stoi(argv[9]) == 1) solvers.emplace_back(new jacobi_alter_ff{});
+    if(std::stoi(argv[5]) == 1) solvers.emplace_back(new jafarm_cpp{});
+    if(std::stoi(argv[6]) == 1) solvers.emplace_back(new jafarm_ff{});
+    if(std::stoi(argv[7]) == 1) solvers.emplace_back(new jafarm_omp{});
+    if(std::stoi(argv[8]) == 1) solvers.emplace_back(new jared_omp{});
+    if(std::stoi(argv[9]) == 1) solvers.emplace_back(new jared_ff{});
     if(std::stoi(argv[10]) == 1) solvers.emplace_back(new jacobi_2red{});
     for (int i = 0; i<solvers.size(); i++){
         for (unsigned int nw = min_w; nw <= max_w; nw++) {

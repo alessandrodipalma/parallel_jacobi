@@ -4,7 +4,7 @@
 #include <numeric>
 
 
-Vector jacobi_native::solve(Matrix A, Vector b, const int max_iter, int nw,
+Vector jafarm_cpp::solve(Matrix A, Vector b, const int max_iter, int nw,
                             std::function<bool(Vector &)> stopping_criteria) {
     int n = A.size();
 
