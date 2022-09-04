@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(parallel_jacobi)
 #
-add_compile_definitions(PRINT_ITER)
-add_compile_definitions(CHECK_ONES)
+#add_compile_definitions(PRINT_ITER)
+#add_compile_definitions(CHECK_ONES)
 
 include(FetchContent)
 
@@ -27,18 +27,15 @@ include_directories(${fastflow_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME}
         include/common.hpp
-        include/task_pool.h
         include/solvers.h
         src/main.cpp
         include/timer.hpp
         src/jacobi_sequential.cpp
-        src/jacobi_native.cpp
-        src/task_pool.cpp
-        src/jacobi_ff.cpp
-        src/jacobi_omp.cpp
-        src/jacobi_alternative.cpp
-        src/jacobi_alter_native.cpp
+        src/jafarm_stdcpp.cpp
+        src/jafarm_ff.cpp
+        src/jafarm_omp.cpp
+        src/jared_omp.cpp
         src/jacobi_double_reduce.cpp
-        src/jacobi_alter_ff.cpp src/jacobi_double_reduce.cpp)
+        src/jared_ff.cpp src/jacobi_double_reduce.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Threads::Threads  OpenMP::OpenMP_CXX)
