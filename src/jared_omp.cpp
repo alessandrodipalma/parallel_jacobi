@@ -1,4 +1,5 @@
 #include "../include/solvers.h"
+#include "../include/timer.hpp"
 #include <omp.h>
 #include <numeric>
 
@@ -25,9 +26,17 @@ Vector jared_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
                     initializer(omp_priv = decltype(omp_orig)(omp_orig.size()))
 
     for(int k = 0; k<max_iter; k+=2) {
+        #ifdef MEASURE_ITERATES
+        timer t("jared_omp iterate");
+        #endif
+
         #pragma omp parallel for num_threads(nw)
         for (int i = 0; i < n; i++) {
+#ifdef MEASURE_ITERATES
+            timer t("jared_omp inner products");
+#endif
             double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(), 0.0);
+
             x_new[i] = (b[i] - s) / diag[i];
 
             int tid = omp_get_thread_num();
@@ -42,6 +51,9 @@ Vector jared_omp::solve(Matrix A, Vector b, const int max_iter, int nw,
 #endif
             k=max_iter;
         } else {
+#ifdef MEASURE_ITERATES
+            timer t("jared_omp reduce");
+#endif
             std::fill(sigma.begin(), sigma.end(), 0.0);
 #pragma omp parallel for shared(sigma_parts) reduction(vector_plus:sigma) num_threads(nw)
             for (int j = 0; j < nw; j++) {

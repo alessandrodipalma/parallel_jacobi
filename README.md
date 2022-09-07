@@ -30,7 +30,7 @@ Then you will need to set a series of boolean flags to select on which variant y
 
 An example of the command is:
 ```shell
-1 12 512 10000 0 1 0 1 0 0
+./build/parallel_jacobi 1 12 512 10000 0 1 0 1 0 0
 ```
 that runs an experiment with 1 to 12 workers, with a system of size 512x512, runs on maximum 10000 iterates, and repeats for Jared FastFlow and JaFarm FastFlow.
 

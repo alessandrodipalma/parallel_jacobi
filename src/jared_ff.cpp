@@ -1,4 +1,5 @@
 #include "../include/solvers.h"
+#include "../include/timer.hpp"
 #include <ff/parallel_for.hpp>
 
 #include <thread>
@@ -41,7 +42,16 @@ Vector jared_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
 
     ff::ParallelForReduce<Vector> pf(nw, false, true);
     for (int k = 0; k < max_iter; k += 2) {
-        pf.parallel_for_thid(0, n, 1, 1, body, nw);
+        #ifdef MEASURE_ITERATES
+        timer t("jared_ff iterate");
+        #endif
+        {
+            #ifdef MEASURE_ITERATES
+            timer t("jared_ff inner prducts");
+            #endif
+            pf.parallel_for_thid(0, n, 1, 1, body, nw);
+        }
+
 
         if (stopping_criteria(x_new)) {
             #ifdef PRINT_ITER
@@ -50,7 +60,13 @@ Vector jared_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
             k = max_iter;
         } else {
             std::fill(sigma.begin(), sigma.end(), 0.0);
-            pf.parallel_reduce(sigma, zero, 0, nw, f, fred, nw);
+            {
+                #ifdef MEASURE_ITERATES
+                timer t("jared_ff reduce");
+                #endif
+                pf.parallel_reduce(sigma, zero, 0, nw, f, fred, nw);
+            }
+
 
             x_new = (b - sigma) / diag;
 
