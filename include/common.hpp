@@ -6,7 +6,7 @@
 #include <tuple>
 #include <iostream>
 #include "omp.h"
-
+#define CHUNK_SIZE 256
 
 namespace dp {
 
@@ -67,6 +67,29 @@ namespace dp {
         for (int i = 0; i < A.size(); i++) {
             product.assign(i, dot(A.at(i), x));
         }
+        return product;
+    }
+
+    inline double vectorizable_dot(Vector x, Vector y, unsigned long long start=0, unsigned long long end=-1) {
+        double product = 0;
+
+        if (end==-1)
+            end = x.size();
+
+        int i=0;
+        while (i<end) {
+            if ((end-i)<CHUNK_SIZE) {
+                for (int j = 0; j < CHUNK_SIZE; j++) {
+                    product += x[i+j] * y[i+j];
+                }
+                i+=CHUNK_SIZE;
+            } else {
+                for (i; i<end; i++) {
+                    product += x[i] * y[i];
+                }
+            }
+        }
+
         return product;
     }
 

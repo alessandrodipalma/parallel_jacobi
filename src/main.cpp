@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
         x = jacobi_seq_separate_iter(std::get<0>(tup), std::get<1>(tup), n_iter, are_ones);
     }
     std::cout << are_ones(x) << "  " << std::endl;
-//    for (auto &it: x) std::cout << it << " ";
+    for (auto &it: x) std::cout << it << " ";
 
 
     std::vector<std::unique_ptr<solver>> solvers;

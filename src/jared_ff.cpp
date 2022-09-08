@@ -24,6 +24,7 @@ Vector jared_ff::solve(Matrix A, const Vector b, const int max_iter, int nw,
     auto body = [&A, &diag, &b, &x, &x_new, &sigma_parts, n](const long i, int tid) {
 
         double s = std::inner_product(A[i].begin(), A[i].end(), x.begin(), 0.0);
+//        double s = vectorizable_dot(A[i],x);
         x_new[i] = (b[i] - s) / diag[i];
 
         for (int j = 0; j < n; j++) {
